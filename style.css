@@ -1,37 +1,48 @@
 .grid {
   width: 400px;
   height: 600px;
-  background-color: yellow;
+  background-image: url("bg.png");
   position: relative;
   margin: 0 auto;
+  border-radius: 5px;
 }
 
-.doodler {
+.bunny {
   width: 60px;
   height: 85px;
-  background-color: red;
+  background-image: url("bunny.png");
   position: absolute;
 }
 
-.platform {
+.cloud {
   width: 60px;
-  height: 15px;
-  background-color: green;
+  height: 25px;
+  background-image: url("cloud.png");
   position: absolute;
 }
 
 .start {
   width: 85px;
   height: 30px;
+  line-height: 30px;
   position: relative;
-  background-color: red;
+  top: -250px;
+  z-index: 10;
+  background-color:rgb(203, 225, 255);
+  box-shadow: 2px 2px 5px rgb(39, 66, 104);
+  color: rgb(70, 106, 156);
+  border-radius: 10px;
   margin: 0 auto;
   text-align: center;
 }
 
 .score {
-  font-size: 150;
-  margin: 0 auto;
+  font-size: 100pt;
   text-align: center;
+  margin: 0 auto;
   position: relative;
+  z-index: 10;
+  top: -300px;
+  color:rgb(203, 225, 255);
+  text-shadow: 2px 2px 5px rgb(39, 66, 104);
 }

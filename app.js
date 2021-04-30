@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   const grid = document.querySelector('.grid')
-  const doodler = document.createElement('div')
+  const bunny = document.createElement('div')
   const startBtn = document.querySelector('.start')
-  let doodlerLeftSpace = 50
+  let bunnyLeftSpace = 50
   let startPoint = 115
-  let doodlerBottomSpace = startPoint
+  let bunnyBottomSpace = startPoint
   let isGameOver = false
-  let platformCount = 4
-  let platforms = []
+  let cloudCount = 4
+  let clouds = []
   let upTimerId
   let downTimerId
   let isJumping = false
@@ -19,55 +19,55 @@ document.addEventListener('DOMContentLoaded', () => {
   let score = 0
  
 
-  function createDoodler() {
-    grid.appendChild(doodler)
-    doodler.classList.add('doodler')
-    doodlerLeftSpace = platforms[0].left
-    doodler.style.left = doodlerLeftSpace + 'px'
+  function createBunny() {
+    grid.appendChild(bunny)
+    bunny.classList.add('bunny')
+    bunnyLeftSpace = clouds[0].left
+    bunny.style.left = bunnyLeftSpace + 'px'
     let startPoint = 115
-    doodlerBottomSpace = startPoint
-    doodler.style.bottom = doodlerBottomSpace + 'px'
+    bunnyBottomSpace = startPoint
+    bunny.style.bottom = bunnyBottomSpace + 'px'
 
   }
 
-  class Platform {
-    constructor(newPlatformBottom) {
-      this.bottom = newPlatformBottom
+  class Cloud {
+    constructor(newCloudBottom) {
+      this.bottom = newCloudBottom
       this.left = Math.random() * 315
       this.visual = document.createElement('div')
 
       const visual = this.visual
-      visual.classList.add('platform')
+      visual.classList.add('cloud')
       visual.style.left = this.left + 'px'
       visual.style.bottom = this.bottom + 'px'
       grid.appendChild(visual)
     }
   }
 
-  function createPlatforms() {
-    for (let i = 0; i < platformCount; i++) {
-      let platformGap = 600 / platformCount
-      let newPlatformBottom = 100 + i * platformGap
-      let newPlatform = new Platform(newPlatformBottom)
-      platforms.push(newPlatform)
+  function createClouds() {
+    for (let i = 0; i < cloudCount; i++) {
+      let cloudGap = 600 / cloudCount
+      let newCloudBottom = 100 + i * cloudGap
+      let newCloud = new Cloud(newCloudBottom)
+      clouds.push(newCloud)
       
     }
   }
 
-  function movePlatforms() {            // why are they moving faster every time I replay?
-    if (doodlerBottomSpace > 200) {
-      platforms.forEach(platform => {
-        platform.bottom -= 3
-        let visual = platform.visual
-        visual.style.bottom = platform.bottom + 'px'
+  function moveClouds() {         
+    if (bunnyBottomSpace > 200) {
+      clouds.forEach(cloud => {
+        cloud.bottom -= 3
+        let visual = cloud.visual
+        visual.style.bottom = cloud.bottom + 'px'
 
-        if (platform.bottom < 10) {
-          let firstPlatform = platforms[0].visual
-          firstPlatform.classList.remove('platform')
-          platforms.shift()
+        if (cloud.bottom < 10) {
+          let firstCloud = clouds[0].visual
+          firstCloud.classList.remove('cloud')
+          clouds.shift()
           score++
-          let newPlatform = new Platform(600)
-          platforms.push(newPlatform)
+          let newCloud = new Cloud(600)
+          clouds.push(newCloud)
         }
 
       })
@@ -78,9 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(downTimerId)
     isJumping = true
     upTimerId = setInterval(function () {
-      doodlerBottomSpace += 20
-      doodler.style.bottom = doodlerBottomSpace + 'px'
-      if (doodlerBottomSpace > startPoint + 200) {
+      bunnyBottomSpace += 20
+      bunny.style.bottom = bunnyBottomSpace + 'px'
+      if (bunnyBottomSpace > startPoint + 200) {
         fall()
       }
     }, 30)
@@ -90,20 +90,20 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(upTimerId)
     isJumping = false
     downTimerId = setInterval(function () {
-      doodlerBottomSpace -= 5
-      doodler.style.bottom = doodlerBottomSpace + 'px'
-      if (doodlerBottomSpace <= 0) {
+      bunnyBottomSpace -= 5
+      bunny.style.bottom = bunnyBottomSpace + 'px'
+      if (bunnyBottomSpace <= 0) {
         gameOver()
       }
-      platforms.forEach(platform => {
+      clouds.forEach(cloud => {
         if (
-          (doodlerBottomSpace >= platform.bottom) &&
-          (doodlerBottomSpace <= platform.bottom + 15) &&
-          ((doodlerLeftSpace + 60) >= platform.left) &&
-          (doodlerLeftSpace <= (platform.left + 60)) &&
+          (bunnyBottomSpace >= cloud.bottom) &&
+          (bunnyBottomSpace <= cloud.bottom + 25) &&
+          ((bunnyLeftSpace + 60) >= cloud.left) &&
+          (bunnyLeftSpace <= (cloud.left + 60)) &&
           !isJumping
         ) {
-          startPoint = doodlerBottomSpace
+          startPoint = bunnyBottomSpace
           jump()
         }
       })
@@ -114,31 +114,42 @@ document.addEventListener('DOMContentLoaded', () => {
     isGameOver = true
     isJumping = false
     document.querySelector('.score').innerHTML = score
+    document.querySelector('.score').style.display = "block"
     startBtn.style.display = "block"
 
     while (grid.firstChild) {
       grid.removeChild(grid.firstChild)
     }
-    while (platforms[0]) {
-      platforms.shift()
+    while (clouds[0]) {
+      clouds.shift()
     }
 
     clearInterval(upTimerId)
     clearInterval(downTimerId)
     clearInterval(leftTimerId)
     clearInterval(rightTimerId)
-    clearInterval(platformTimerId)
+    clearInterval(cloudTimerId)
 
     startPoint = 115
-    doodlerBottomSpace = startPoint
+    bunnyBottomSpace = startPoint
   };
 
   function control(e) {
     if (e.key === "ArrowLeft") {
+      flipBunnyLeft()
       moveLeft()
     } else if (e.key === "ArrowRight") {
+      flipBunnyRight()
       moveRight()
     }
+  }
+
+  function flipBunnyRight() {
+    bunny.style.transform = "rotateY(180deg)";
+  }
+
+  function flipBunnyLeft() {
+    bunny.style.transform = "rotateY(360deg)";
   }
 
   function moveLeft() {
@@ -149,17 +160,17 @@ document.addEventListener('DOMContentLoaded', () => {
     isGoingLeft = true
     clearInterval(leftTimerId)
     leftTimerId = setInterval(function() {
-      if (doodlerLeftSpace >= 0) {
-      doodlerLeftSpace -= 5
-      doodler.style.left = doodlerLeftSpace + 'px'
+      if (bunnyLeftSpace >= 0) {
+      bunnyLeftSpace -= 5
+      bunny.style.left = bunnyLeftSpace + 'px'
       } else {
         moveRight()
       }
     },30)
-    setTimeout(function(){
-      clearInterval(leftTimerId)
-      isGoingLeft = false
-    },600)
+    //setTimeout(function(){
+    //  clearInterval(leftTimerId)
+    //  isGoingLeft = false
+    //},600)
   }
 
   function moveRight() {
@@ -170,26 +181,26 @@ document.addEventListener('DOMContentLoaded', () => {
     isGoingRight = true
     clearInterval(rightTimerId)
     rightTimerId = setInterval(function() {
-      if (doodlerLeftSpace <= 340) {
-        doodlerLeftSpace += 5
-        doodler.style.left = doodlerLeftSpace + 'px'
+      if (bunnyLeftSpace <= 340) {
+        bunnyLeftSpace += 5
+        bunny.style.left = bunnyLeftSpace + 'px'
       } else {
         moveLeft()
       }
     },30)
-    setTimeout(function(){
-      clearInterval(rightTimerId)
-      isGoingRight = false
-    },600)
+    //setTimeout(function(){
+    //  clearInterval(rightTimerId)
+    //  isGoingRight = false
+    //},600)
   }
 
   function start() {
     isGameOver = false
     if (!isGameOver) {
       score = 0
-      createPlatforms()
-      createDoodler()
-      platformTimerId = setInterval(movePlatforms, 30)
+      createClouds()
+      createBunny()
+      cloudTimerId = setInterval(moveClouds, 30)
       jump()
       document.addEventListener('keydown', control)
     }
@@ -197,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   (startBtn).addEventListener("click", function() {
     this.style.display = "none";
+    document.querySelector('.score').style.display = "none";
     start()
   })
 
