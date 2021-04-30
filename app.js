@@ -4,14 +4,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const doodler = document.createElement('div')
   const startBtn = document.querySelector('.start')
   let doodlerLeftSpace = 50
-  let startPoint = 150
+  let startPoint = 115
   let doodlerBottomSpace = startPoint
   let isGameOver = false
   let platformCount = 4
   let platforms = []
   let upTimerId
   let downTimerId
-  let isJumping = true
+  let isJumping = false
   let isGoingLeft = false
   let isGoingRight = false
   let leftTimerId
@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     doodler.classList.add('doodler')
     doodlerLeftSpace = platforms[0].left
     doodler.style.left = doodlerLeftSpace + 'px'
+    let startPoint = 115
+    doodlerBottomSpace = startPoint
     doodler.style.bottom = doodlerBottomSpace + 'px'
 
   }
@@ -52,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function movePlatforms() {
+  function movePlatforms() {            // why are they moving faster every time I replay?
     if (doodlerBottomSpace > 200) {
       platforms.forEach(platform => {
         platform.bottom -= 3
@@ -98,37 +100,37 @@ document.addEventListener('DOMContentLoaded', () => {
           (doodlerBottomSpace >= platform.bottom) &&
           (doodlerBottomSpace <= platform.bottom + 15) &&
           ((doodlerLeftSpace + 60) >= platform.left) &&
-          (doodlerLeftSpace <= (platform.left + 85)) &&
+          (doodlerLeftSpace <= (platform.left + 60)) &&
           !isJumping
         ) {
           startPoint = doodlerBottomSpace
           jump()
         }
       })
-    }, 30)
+    }, 20)
   };
 
   function gameOver() {
     isGameOver = true
+    isJumping = false
     document.querySelector('.score').innerHTML = score
+    startBtn.style.display = "block"
 
-    grid.removeChild(doodler)
-    const deadPlatforms = document.getElementsByClassName('platform')
-    while (deadPlatforms.length > 0) {
-      deadPlatforms[0].remove();
+    while (grid.firstChild) {
+      grid.removeChild(grid.firstChild)
+    }
+    while (platforms[0]) {
+      platforms.shift()
     }
 
     clearInterval(upTimerId)
     clearInterval(downTimerId)
     clearInterval(leftTimerId)
     clearInterval(rightTimerId)
-    platforms = []
+    clearInterval(platformTimerId)
 
-    //const replay = document.createElement('div')
-    //replay.classList.add('start')
-    //replay.innerHTML = "replay";
-    //grid.appendChild(replay)
-    startBtn.style.display = "block";
+    startPoint = 115
+    doodlerBottomSpace = startPoint
   };
 
   function control(e) {
@@ -154,6 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
         moveRight()
       }
     },30)
+    setTimeout(function(){
+      clearInterval(leftTimerId)
+      isGoingLeft = false
+    },600)
   }
 
   function moveRight() {
@@ -171,14 +177,19 @@ document.addEventListener('DOMContentLoaded', () => {
         moveLeft()
       }
     },30)
+    setTimeout(function(){
+      clearInterval(rightTimerId)
+      isGoingRight = false
+    },600)
   }
 
   function start() {
     isGameOver = false
     if (!isGameOver) {
+      score = 0
       createPlatforms()
       createDoodler()
-      setInterval(movePlatforms, 30)
+      platformTimerId = setInterval(movePlatforms, 30)
       jump()
       document.addEventListener('keydown', control)
     }
