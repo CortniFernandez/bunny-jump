@@ -67,10 +67,17 @@ body {
 
 .footer {
   text-align: center;
+  position: fixed;
+  top: 700px;
+  left: 47%;
   color: rgb(70, 106, 156);
 }
 
 a {
   text-decoration: none;
   color: rgb(39, 66, 104);
+}
+
+a:hover {
+  color: white;
 }
