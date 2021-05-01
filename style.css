@@ -1,10 +1,16 @@
+body {
+  background-color: rgb(203, 225, 255);
+}
+
 .grid {
   width: 400px;
   height: 600px;
   background-image: url("bg.png");
   position: relative;
-  margin: 0 auto;
+  margin: 50px auto 0;
   border-radius: 5px;
+  box-shadow: 0 0 45px 15px rgba(34, 69, 122, 0.75);
+  clip-path: inset(0px -75px 0px -75px);
 }
 
 .bunny {
@@ -45,4 +51,26 @@
   top: -300px;
   color:rgb(203, 225, 255);
   text-shadow: 2px 2px 5px rgb(39, 66, 104);
+}
+
+.arrows {
+  height: 50px;
+  width: 110px;
+  background-image: url("arrows.png");
+  background-repeat: none;
+  z-index: 10;
+  position: relative;
+  margin: 0 auto;
+  top: -350px;
+  opacity: 0.8;
+}
+
+.footer {
+  text-align: center;
+  color: rgb(70, 106, 156);
+}
+
+a {
+  text-decoration: none;
+  color: rgb(39, 66, 104);
 }

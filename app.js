@@ -209,6 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
   (startBtn).addEventListener("click", function() {
     this.style.display = "none";
     document.querySelector('.score').style.display = "none";
+    document.querySelector('.arrows').style.display = "none";
     start()
   })
 
